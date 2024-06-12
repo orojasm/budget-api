@@ -1,6 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Request } from 'express';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
+import {
+  CORRELATION_ID_HEADER,
+  CorrelationIdMiddleware,
+} from './common/middlewares/correlation-id.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -19,6 +24,11 @@ import { AppService } from './app.service';
           },
         },
         messageKey: 'message',
+        customProps: (req: Request) => {
+          return {
+            correlation: req[CORRELATION_ID_HEADER],
+          };
+        },
         autoLogging: false,
         serializers: {
           req: () => undefined,
@@ -30,4 +40,8 @@ import { AppService } from './app.service';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+  }
+}

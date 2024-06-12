@@ -21,5 +21,8 @@
   "peacock.color": "#215732",
   "conventionalCommits.scopes": [
     "Configuration"
+  ],
+  "cSpell.words": [
+    "Inicialización"
   ]
 }

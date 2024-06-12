@@ -6,6 +6,8 @@
 2. [Configuración de Git y github](#2-configuración-de-git-y-github)
 3. [Configuración de NestJs](#3-configuración)
 4. [Usar el Logger de Pino](#4-usar-el-logger-de-pino)
+5. [Implementar CorrelationId](#5-implementar-correlationid)
+
 
 ## 1. Crear el proyecto
 Para crear un nuevo proyecto necesitamos tener instalado NestJs cli.
@@ -251,5 +253,92 @@ export class AppController {
 ```
 
 [Ir al inicio]
+
+## 5. Implementar CorrelationId
+
+### CorrelationIdMiddleware
+
+Creamos un el Middleware CorrelationIdMiddleware, el cual va a generar un CORRELATION_ID y lo va a poner en rl request y el response.
+
+``` typescript
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { NextFunction, Request, Response } from 'express';
+import { randomUUID } from 'crypto';
+
+export const CORRELATION_ID_HEADER = 'X-Correlation-Id';
+
+@Injectable()
+export class CorrelationIdMiddleware implements NestMiddleware {
+  use(req: Request, res: Response, next: NextFunction) {
+    const id = randomUUID();
+
+    req[CORRELATION_ID_HEADER] = id;
+    res.set(CORRELATION_ID_HEADER, id);
+
+    next();
+  }
+}
+```
+
+### Adicionar el CORRELATION_ID al Logger
+
+Le indicamos al Logger que debe mostrar el 'X-Correlation-Id' que se encuentra el el request, esto se lo indicamos en la opción ``customProps`` de la configuración del LoggerModule en el archivo app.modulo.
+
+Ademas le indicamos a la clase AppModule que aplique el consumer ``CorrelationIdMiddleware`` a todas las rutas.
+
+``` typescript
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Request } from 'express';
+import { ConfigModule } from '@nestjs/config';
+import { LoggerModule } from 'nestjs-pino';
+import {
+  CORRELATION_ID_HEADER,
+  CorrelationIdMiddleware,
+} from './common/middlewares/correlation-id.middleware';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env/.env.${process.env.NODE_ENV}`,
+    }),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            messageKey: 'message',
+          },
+        },
+        messageKey: 'message',
+        customProps: (req: Request) => {
+          return {
+            correlation: req[CORRELATION_ID_HEADER],
+          };
+        },
+        autoLogging: false,
+        serializers: {
+          req: () => undefined,
+          res: () => undefined,
+        },
+      },
+    }),
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+  }
+}
+```
+
+
+[Ir al inicio]
+
+## fin
 
 [Ir al inicio]: <#top>
