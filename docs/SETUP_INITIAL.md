@@ -3,10 +3,11 @@
 ## Contenido
 
 1. [Creación del proyecto](#1-crear-el-proyecto)
-2. [Configuración de Git y github](#2-configuración-de-git-y-github)
-3. [Configuración de NestJs](#3-configuración)
-4. [Usar el Logger de Pino](#4-usar-el-logger-de-pino)
-5. [Implementar CorrelationId](#5-implementar-correlationid)
+2. [Configuración de Git y Github](#2-configuración-de-git-y-github)
+3. [Uso de Branch en Git](#3-uso-de-branch-en-git)
+4. [Configuración de NestJs](#4-configuración)
+5. [Usar el Logger de Pino](#5-usar-el-logger-de-pino)
+6. [Implementar CorrelationId](#6-implementar-correlationid)
 
 
 ## 1. Crear el proyecto
@@ -38,6 +39,8 @@ Y finalmente desde un navegador vamos al la dirección http://localhost:3000/, p
 
 ## 2. Configuración de Git y Github
 
+### Commit Inicial
+
 En Local movemos todos los archivos al staging area y creamos el commit inicial (con el estándar de Conventional Commits).
 
 ```bash
@@ -45,12 +48,17 @@ git add .
 git commit -m "chore(config): :tada: initial commit"
 ```
 
+### Repositorio
+
 Definimos el repositorio budget-api en Github y conectamos nuestro repositorio local a github
 
 ```bash
 git remote add origin git@github.com:orojasm/budget-api.git
 git push -u origin main
 ```
+
+### Branch Release
+
 Definimos la rama release y sincronizarla con github
 
 ```bash
@@ -58,6 +66,8 @@ git branch release
 git checkout release
 git push -u origin release
 ```
+
+### Branch Develop
 
 Definimos la rama develop y sincronizarla con github
 
@@ -67,6 +77,8 @@ git checkout develop
 git push -u origin develop
 ```
 
+### Branch feature/initial_setup
+
 Definimos la rama feature/initial_setup
 
 ```bash
@@ -74,9 +86,72 @@ git branch feature/initial_setup
 git checkout feature/initial_setup
 ```
 
+## 3. Uso de Branch en Git
+
+1. Lista todas las ramas
+
+``` bash
+git branch --list --all -v
+```
+
+2. Definir la rama feature/new_feature
+
+``` bash
+# primer método
+git branch --list --all
+git checkout develop
+git branch feature/new_feature
+git checkout feature/new_feature
+
+# O el método abreviado
+git checkout develop
+git checkout -b feature/new_feature
+```
+
+3. Adicionar archivos y hacer un commit
+
+``` bash
+git add .
+git status
+git commit -m "«new feature»"
+```
+
+4. Adicionar un archivo al commit actual
+
+``` bash
+git add «file»
+git status
+git commit --amend --no-edit
+```
+
+5. Subir la rama feature/new_feature
+
+``` bash
+git push origin feature/new_feature
+```
+
+6. Hacer el pull request
+
+7. Sincroniza la rama develop del remoto en el local
+``` bash
+git checkout develop
+git pull origin develop
+```
+
+* Otros comandos
+  * ver el log de git
+``` bash
+git log --graph --all --since=2024-01-01 
+```
+* 
+  * Renombrar una rama
+``` bash
+git branch -m feature/initial feature/initial_setup
+```
+
 [Ir al inicio]
 
-## 3. Configuración
+## 4. Configuración
 
 Para utilizar diferentes ajustes de configuración por ambientes, la mejor práctica es almacenar las variables de configuración en el entorno en archivos separados.
 
@@ -137,7 +212,7 @@ Por ultimo, adicionamos la variable de entorno NODE_ENV a los comandos de in ini
 
 [Ir al inicio]
 
-## 4. Usar el Logger de Pino
+## 5. Usar el Logger de Pino
 
 ### Instalación
 
@@ -254,7 +329,7 @@ export class AppController {
 
 [Ir al inicio]
 
-## 5. Implementar CorrelationId
+## 6. Implementar CorrelationId
 
 ### CorrelationIdMiddleware
 
