@@ -6,8 +6,6 @@ import {
   CORRELATION_ID_HEADER,
   CorrelationIdMiddleware,
 } from './common/middlewares/correlation-id.middleware';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -37,8 +35,8 @@ import { AppService } from './app.service';
       },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
