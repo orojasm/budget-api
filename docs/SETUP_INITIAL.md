@@ -5,6 +5,7 @@
 1. [Creación del proyecto](#1-crear-el-proyecto)
 2. [Configuración de Git y github](#2-configuración-de-git-y-github)
 3. [Configuración de NestJs](#3-configuración)
+4. [Usar el Logger de Pino](#4-usar-el-logger-de-pino)
 
 ## 1. Crear el proyecto
 Para crear un nuevo proyecto necesitamos tener instalado NestJs cli.
@@ -123,12 +124,6 @@ async function bootstrap() {
 bootstrap();
 ```
 
-`const logger = new Logger();`
-
-
-
-
-
 Por ultimo, adicionamos la variable de entorno NODE_ENV a los comandos de in inicio de NestJs en el archivo `package.json`  
 
 ``` json
@@ -136,6 +131,123 @@ Por ultimo, adicionamos la variable de entorno NODE_ENV a los comandos de in ini
     "start:dev": "export NODE_ENV=development && nest start --watch",
     "start:debug": "export NODE_ENV=development && nest start --debug --watch",
     "start:prod": "export NODE_ENV=production && node dist/main",
+```
+
+[Ir al inicio]
+
+## 4. Usar el Logger de Pino
+
+### Instalación
+
+Comenzamos instalado las dependencias necesarias para usar el Logger Pino.
+
+``` bash
+# Dependencias del logger de pino
+npm install nestjs-pino pino-http
+# Formateo de los logger de pino
+npm install -D pino-pretty
+```
+
+### Configuración
+
+Importar el LoggerModule desde nestjs-pino.
+
+Configurar las siguientes opciones de Pino.
+
+* Le indicamos a Pino que en la capa de transporte se debe mostrar el ``messageKey: 'message'``, de acuerdo al formato de ``pino-pretty``
+* Definimos el ``messageKey``
+* Indicamos que no se debe generar contenido par parte de Pino ``autoLogging: false,``
+* Finalmente en la opción ``serializers: { .. }``, le indicamos a Pino que no genere ni el Request ni el Response.
+
+
+``` typescript
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { LoggerModule } from 'nestjs-pino';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env/.env.${process.env.NODE_ENV}`,
+    }),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            messageKey: 'message',
+          },
+        },
+        messageKey: 'message',
+        autoLogging: false,
+        serializers: {
+          req: () => undefined,
+          res: () => undefined,
+        },
+      },
+    }),
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+
+```
+
+### Inicialización
+
+Inicializamos Pino en main.ts: Después de la instalar y configurar Pino, procedemos se puede incorporar a su aplicación NestJS a través de su archivo main.ts
+
+* Importamos Pino y Logger de NestJS
+* Le indicamos a express que use el Logger de Pino (``app.useLogger(app.get(Pino.Logger));``)
+* y por último insertamos dos mensajes en el logger
+
+``` typescript
+import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
+import * as Pino from 'nestjs-pino';
+import { Logger } from '@nestjs/common';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useLogger(app.get(Pino.Logger));
+  const logger = new Logger('Main');
+  logger.log('Pino logger Started');
+  const configService = app.get(ConfigService);
+  await app.listen(configService.get('PORT'));
+
+  logger.log(`NestJs started on http://localhost:${configService.get('PORT')}`);
+}
+bootstrap();
+```
+
+###  Uso
+
+* Por ejemplo en el ***app.controller.ts***, se crea una instancia del logger ``private readonly logger = new Logger(AppController.name);``
+* durante la ejecución de una petición se escribe en el logger un mensaje ``this.logger.log({ message: 'Start getHello' });``
+
+``` typescript
+import { Controller, Get, Logger } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  private readonly logger = new Logger(AppController.name);
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    this.logger.log({ message: 'Start getHello' });
+    const response = this.appService.getHello();
+    this.logger.log({ message: 'Finish getHello' });
+    return response;
+  }
+}
+
 ```
 
 [Ir al inicio]
