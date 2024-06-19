@@ -91,32 +91,54 @@ git checkout feature/initial_setup
 1. Lista todas las ramas
 
 ``` bash
+# listar todos los Branch:
+#  -v: usamos -v para ver la última confirmación de cambios en cada Branch
 git branch --list --all -v
 ```
 
 2. Definir la rama feature/new_feature
 
 ``` bash
-# primer método
-git branch --list --all
+# ubicarse en el branch padre del nuevo branch
 git checkout develop
+
+
+# *** PRIMER método
+# crea una nueva rama 
 git branch feature/new_feature
+# salta a la nueva rama
 git checkout feature/new_feature
 
-# O el método abreviado
-git checkout develop
+
+# *** SEGUNDO método (método abreviado)
 git checkout -b feature/new_feature
 ```
 
-3. Adicionar archivos y hacer un commit
+3. Eliminar un Branch
 
 ``` bash
+# primero ubicarse en un branch diferente al que estas intentando borrar
+git checkout main
+
+# para borrar la branch local
+git branch -d localBranchName
+
+# para borrar la branch remota
+git push origin --delete remoteBranchName
+```
+
+4. Adicionar archivos y hacer un commit
+
+``` bash
+# preparamos los archivo
 git add .
+# verificamos el estado de los cambios
 git status
+# confirmamos las cambios
 git commit -m "«new feature»"
 ```
 
-4. Adicionar un archivo al commit actual
+5. Adicionar un archivo al commit actual
 
 ``` bash
 git add «file»
@@ -124,15 +146,36 @@ git status
 git commit --amend --no-edit
 ```
 
-5. Subir la rama feature/new_feature
+6. Subir la rama feature/new_feature
 
 ``` bash
 git push origin feature/new_feature
 ```
 
-6. Hacer el pull request
+7. Crear el Pull request
 
-7. Sincroniza la rama develop del remoto en el local
+En la pagina del proyecto de [github](https://github.com/orojasm/budget-api), presionar el botón <kbd>Compare & Pull request</kbd>, el cual se encuentra ubicado arriba a la derecha.
+
+``` 
+Rama base: develop
+compare: feature/new_feature
+
+Title: Feature/initial setup
+
+Add description: 
+  1. Installation and initialization of the configuration module
+  2. Implement pino logger
+  3. Implement correlation id
+  4. Remove app.controller and app.services
+```
+
+Una vez diligenciado el Pull Request, presionar el botón <kbd>Create Pull request</kbd>, el cual se encuentra ubicado de abajo a la derecha.
+
+8. Merge Pull request
+
+En la pagina del proyecto de [github](https://github.com/orojasm/budget-api), Seleccionar la pestaña `Pull request`, hacer click en el Pull request y presionar el botón <kbd>Merge Pull request</kbd> y por ultimo presionar el botón <kbd>Confirm merge</kbd>
+
+9. Sincroniza la rama develop del remoto en el local
 ``` bash
 git checkout develop
 git pull origin develop
