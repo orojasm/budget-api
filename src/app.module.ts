@@ -6,6 +6,9 @@ import {
   CORRELATION_ID_HEADER,
   CorrelationIdMiddleware,
 } from './common/middlewares/correlation-id.middleware';
+import { BillModule } from './bill/bill.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -34,6 +37,9 @@ import {
         },
       },
     }),
+    MongooseModule.forRoot('mongodb://localhost:27017/finance'),
+    BillModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
