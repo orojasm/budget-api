@@ -70,6 +70,11 @@ Data stored on a docker volume in the `mongo/` directory uses port 27027.
 docker-compose up -d
 ```
 
+To rebuild the database with a seed run the following command.
+
+```http
+http://localhost:3030/api/v1/seed
+```
 
 ## Running the app
 

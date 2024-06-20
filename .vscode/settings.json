@@ -20,7 +20,10 @@
   },
   "peacock.color": "#215732",
   "conventionalCommits.scopes": [
-    "Configuration"
+    "Configuration",
+    "Invoice",
+    "RecurringBill",
+    "populated"
   ],
   "cSpell.words": [
     "Inicialización"

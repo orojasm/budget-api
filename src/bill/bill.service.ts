@@ -9,11 +9,13 @@ import { Model } from 'mongoose';
 
 import { Bill } from './entities/bill.entity';
 import { CreateBillDto, UpdateBillDto } from './dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class BillService {
   constructor(
-    @InjectModel(Bill.name) private readonly billModel: Model<Bill>,
+    @InjectModel(Bill.name)
+    private readonly billModel: Model<Bill>,
   ) {}
 
   private readonly logger = new Logger(BillService.name);
@@ -28,8 +30,14 @@ export class BillService {
     }
   }
 
-  async findAll() {
-    const bills = await this.billModel.find();
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto;
+    const bills = await this.billModel
+      .find()
+      .limit(limit)
+      .skip(offset)
+      .sort({ dueDate: 1 })
+      .select('-__v');
     return bills;
   }
 
