@@ -10,6 +10,7 @@ import { BillModule } from './bill/bill.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommonModule } from './common/common.module';
 import { RecurringBillModule } from './recurring-bill/recurring-bill.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { RecurringBillModule } from './recurring-bill/recurring-bill.module';
     BillModule,
     CommonModule,
     RecurringBillModule,
+    SeedModule,
   ],
   controllers: [],
   providers: [],
