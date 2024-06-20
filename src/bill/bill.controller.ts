@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { BillService } from './bill.service';
 import { CreateBillDto, UpdateBillDto } from './dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('bills')
 export class BillController {
@@ -21,8 +23,8 @@ export class BillController {
   }
 
   @Get()
-  findAll() {
-    return this.billService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.billService.findAll(paginationDto);
   }
 
   @Get(':id')
