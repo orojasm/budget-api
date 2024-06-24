@@ -49,6 +49,8 @@ Data persistence is in charge of `MongoDB`, for the development environment we u
 
 ## Installation
 
+### Clonar el repositorio e instalar dependencias
+
 ```bash
 # clone github repository
 git clone https://github.com/orojasm/budget-api.git
@@ -59,6 +61,11 @@ cd budget-api
 # install dependencies
 npm install
 ```
+### Configurar variables de entorno
+
+Once the application is installed we must clone the ___.env.development.template___ file and rename the copy to ___.env.development___
+
+Fill the environment variables defined in the file ___.env.development___
 
 ## Execute the database
 
