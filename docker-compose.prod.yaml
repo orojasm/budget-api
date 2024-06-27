@@ -1,0 +1,32 @@
+# Build as docker-compose -f docker-compose.prod.yaml --env-file .env/.env.production up --build
+# Run as   docker-compose -f docker-compose.prod.yaml --env-file .env/.env.production up -d
+services:
+  appfinance:
+    depends_on:
+      - db
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: finance-docker
+    container_name: appfinance
+    restart: always 
+    ports:
+      - "${PORT}:${PORT}"
+    # working_dir: /var/www/pokedex
+    environment:
+      MONGODB: ${MONGODB}
+      PORT: ${PORT}
+      DEFAULT_LIMIT: ${DEFAULT_LIMIT}
+    # volumes:
+    #   - ./:/var/www/pokedex
+
+  db:
+    image: mongo:5
+    container_name: mongo-fi
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/data/db
+    environment:
+      MONGODB_DATABASE: finance

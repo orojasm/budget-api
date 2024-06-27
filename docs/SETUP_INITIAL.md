@@ -177,8 +177,14 @@ En la pagina del proyecto de [github](https://github.com/orojasm/budget-api), Se
 
 9. Sincroniza la rama develop del remoto en el local
 ``` bash
+# ubicarse en el branch padre del nuevo branch
 git checkout develop
+# descargamos el brach develop 
 git pull origin develop
+
+# crea una nueva rama 
+git checkout -b feature/new_feature
+
 ```
 
 * Otros comandos

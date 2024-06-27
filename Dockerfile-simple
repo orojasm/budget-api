@@ -1,0 +1,29 @@
+# NodeJS 18 on Linux Alpine 3.15
+FROM node:18-alpine3.15
+
+# Set working directory in Linux Alpine
+RUN mkdir -p /var/www/budget
+WORKDIR /var/www/budget
+
+# Copy the project to the Linux Alpine working directory
+COPY . ./var/www/budget
+COPY package.json tsconfig.json tsconfig.build.json /var/www/budget/
+
+# Install and buils Budget-api application
+RUN yarn install --prod
+RUN yarn build
+
+# Create the user who will run the application
+RUN adduser --disabled-password budgetuser
+# Give permission to run the application
+RUN chown -R budgetuser:budgetuser /var/www/budget
+USER budgetuser
+
+# Clear cache
+RUN yarn cache clean --force
+
+# Expose the app port
+EXPOSE 3000
+
+# Iniciar la app con el comando "yarn start"
+CMD [ "yarn","start" ]

@@ -39,8 +39,11 @@ async function bootstrap() {
   const billDocument = SwaggerModule.createDocument(app, bullOptions);
   SwaggerModule.setup('swagger', app, billDocument);
 
-  await app.listen(configService.get('PORT'));
+  await app.listen(configService.get<string>('port'));
 
-  logger.log(`NestJs started on http://localhost:${configService.get('PORT')}`);
+  logger.log(`App Running on port ${configService.get<number>('port')}`);
+  logger.log(
+    `   Pagination limit ${configService.get<number>('defaultLimit')}`,
+  );
 }
 bootstrap();

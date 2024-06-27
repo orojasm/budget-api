@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import {
   BadRequestException,
   Injectable,
@@ -13,10 +14,14 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class BillService {
+  defaultLimit: number;
   constructor(
     @InjectModel(Bill.name)
     private readonly billModel: Model<Bill>,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.defaultLimit = configService.get<number>('defaultLimit');
+  }
 
   private readonly logger = new Logger(BillService.name);
 
@@ -31,7 +36,7 @@ export class BillService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const { limit = 10, offset = 0 } = paginationDto;
+    const { limit = this.defaultLimit, offset = 0 } = paginationDto;
     const bills = await this.billModel
       .find()
       .limit(limit)
