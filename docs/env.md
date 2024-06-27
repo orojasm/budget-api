@@ -2,7 +2,7 @@
 
 Para validar y gestionar de forma sencilla las variables de entorno utilizaremos `@nestjs/config` y el paquete JOI.
 
-Primero instalaremos y configuraremos `@nestjs/config` ver la seccion [4. Configuración de NestJS](SETUP_INITIAL.md#4-configuración) del archivo SETUP_INITIAL.md.
+Primero instalaremos y configuraremos `@nestjs/config` ver la sección [4. Configuración de NestJS](setup_initial.md#4-configuración) del archivo setup_initial.md.
 
 ## Instalar JOI
 
@@ -13,7 +13,7 @@ npm install joi
 
 ## Configuración
 
-Usaremos dos archivos: ___joivalidation.ts___ en el que definiremos nuestas validaciones y valores por defecto, y ___env.configuration.ts___  en el cual definiremos una funcion de acceso a nuestras variable.  ver los siguientes ejemplos:
+Usaremos dos archivos: ___joivalidation.ts___ en el que definiremos nuestras validaciones y valores por defecto, y ___env.configuration.ts___  en el cual definiremos una función de acceso a nuestras variable.  ver los siguientes ejemplos:
 
 **joivalidation.ts**
 ``` typescript
@@ -55,7 +55,7 @@ import { EnvConfiguration } from './config/env.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env/.env.${process.env.NODE_ENV}`,
+      envFilePath: `.env-dir/.env.${process.env.NODE_ENV}`,
       load: [EnvConfiguration],
       validationSchema: JoiValidationSchema,
     }),

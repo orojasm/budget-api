@@ -49,7 +49,7 @@ Data persistence is in charge of `MongoDB`, for the development environment we u
 
 ## Installation
 
-### Clonar el repositorio e instalar dependencias
+### Clone the repository and install dependencies
 
 ```bash
 # clone github repository
@@ -61,11 +61,11 @@ cd budget-api
 # install dependencies
 npm install
 ```
-### Configurar variables de entorno
+### Configure environment variables
 
-Once the application is installed we must clone the ___.env.development.template___ file and rename the copy to ___.env.development___
+Once the application is installed we must clone the ___.env-dir/.env.template___ file and rename the copy to ___.env-dir/.env.development___
 
-Fill the environment variables defined in the file ___.env.development___
+Fill the environment variables defined in the file ___.env-dir/.env.development___
 
 ## Execute the database
 
@@ -107,6 +107,36 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+```
+
+## Production build
+
+### Clone the repository and install dependencies
+
+``` bash
+# clone github repository
+git clone https://github.com/orojasm/budget-api.git
+
+# locate yourself in the application directory
+cd budget-api
+```
+
+### Configure environment variables
+
+Once the application is installed we must clone the ___.env-dir/.env.template___ file and rename the copy to ___.env-dir/.env.production___
+
+Fill the environment variables defined in the file ___.env-dir/.env.production___
+
+### Build.
+
+Create the images and run the application and database container.
+
+``` bash
+# docker compose to build and run
+docker-compose -f docker-compose.prod.yaml --env-file .env-dir/.env.production up --build
+
+# or docker compose to run (detach)
+docker-compose -f docker-compose.prod.yaml --env-file .env-dir/.env.production up -d
 ```
 
 ## Stay in touch
