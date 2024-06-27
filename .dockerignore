@@ -1,0 +1,14 @@
+.git/
+.vscode/
+coverage/
+dist/
+docs/
+mongo/
+node_modules/
+test/
+
+.gitignore
+.prettierrc
+Dockerfile-simple
+file.log
+README.md

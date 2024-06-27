@@ -18,7 +18,7 @@ import { EnvConfiguration } from './config/env.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env/.env.${process.env.NODE_ENV}`,
+      envFilePath: `.env-dir/.env.${process.env.NODE_ENV}`,
       load: [EnvConfiguration],
       validationSchema: JoiValidationSchema,
     }),
